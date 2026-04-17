@@ -46,6 +46,7 @@ class FileManager:
 
     # This function receives a date as a parameter and saves it as a text file.
     def save_last_download_date(self, last_update):
+        # Save the passed date in a txt file
         try:
           with open(self.last_download_file_date, 'w', encoding='utf-8') as f:
             f.write(str(last_update))
@@ -63,7 +64,21 @@ class FileManager:
         except Exception:
             return None
 
+    # This function retrieve the date from the date txt file
+    def read_last_download_date(self):
+        # If there is date txt file
+        if os.path.exists(self.last_download_file_date):
+            # Read the date and return it
+            try:
+                with open(self.last_download_file_date, 'r', encoding='utf-8') as f:
+                    date_str = f.read().strip()
+                    return date_str
+            except Exception as e:
+                print(f"Error while reading the date: {e}")
+                return None
+        # Else if the date txt file hasn't been created yet
+        else:
+            print(f" The date txt file {self.last_download_file_date} doesn't exist  ")
+            return None
 
-    def read_last_date(self):
-        pass
 
