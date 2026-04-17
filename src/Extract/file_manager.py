@@ -55,15 +55,6 @@ class FileManager:
             print(f"Error while saving the Last download date {e}")
             return None
 
-    # This function converts strings to date time that will be used to compare two dates
-    def parse_date(self, date_str):
-        try:
-            if date_str is None:
-                return None
-            return parser.parse(date_str)
-        except Exception:
-            return None
-
     # This function retrieve the date from the date txt file
     def read_last_download_date(self):
         # If there is date txt file
