@@ -19,10 +19,30 @@ class FileManager:
 
 
     def save_file(self, stream):
-        pass
+        try:
+            # Prepare the file to write the data in binary access mode
+            with open(self.output_gz_data_path, "wb") as f:
+                # Start the download process, as chunks, each one has a size of 1MB
+                for chunk in stream.iter_content(chunk_size=1024 * 1024):
+                    if chunk:
+                        f.write(chunk)
+        # Catch general exceptions
+        except Exception as e:
+            raise IOError(f"Error saving file: {e}")
 
-    def get_file_size(self):
-        pass
+        if not self.data_file_exists():
+            raise FileNotFoundError("Data file was not created")
+
+        if self.get_data_file_size_mb() == 0:
+            raise ValueError("Downloaded data file is empty")
+
+
+
+    def get_data_file_size_mb(self):
+        if not self.data_file_exists():
+            return 0
+        return  os.path.getsize(self.output_gz_data_path) / (1024 * 1024)
+
 
     def save_last_date(self, date):
         pass
