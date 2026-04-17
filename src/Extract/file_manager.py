@@ -1,6 +1,4 @@
 import os
-import gzip
-from dateutil import parser
 
 
 class FileManager:
@@ -55,7 +53,7 @@ class FileManager:
             print(f"Error while saving the Last download date {e}")
             return None
 
-    # This function retrieve the date from the date txt file
+    # This function retrieves the date from the date txt file
     def read_last_download_date(self):
         # If there is date txt file
         if os.path.exists(self.last_download_file_date):
