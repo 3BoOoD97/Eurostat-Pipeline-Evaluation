@@ -1,5 +1,7 @@
 import os
 import gzip
+from dateutil import parser
+
 
 class FileManager:
     def __init__(self, dataset_name: str = None):
@@ -42,9 +44,26 @@ class FileManager:
             return 0
         return  os.path.getsize(self.output_gz_data_path) / (1024 * 1024)
 
+    # This function receives a date as a parameter and saves it as a text file.
+    def save_last_download_date(self, last_update):
+        try:
+          with open(self.last_download_file_date, 'w', encoding='utf-8') as f:
+            f.write(str(last_update))
+            print(f"Last download date {last_update} data file saved to {self.last_download_file_date}")
+        except Exception as e:
+            print(f"Error while saving the Last download date {e}")
+            return None
 
-    def save_last_date(self, date):
-        pass
+    # This function converts strings to date time that will be used to compare two dates
+    def parse_date(self, date_str):
+        try:
+            if date_str is None:
+                return None
+            return parser.parse(date_str)
+        except Exception:
+            return None
+
 
     def read_last_date(self):
         pass
+
