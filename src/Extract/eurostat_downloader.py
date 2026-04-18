@@ -1,6 +1,7 @@
 import eurostat_client as eurostat_client
 import file_manager as file_manager
 
+
 from dateutil import parser
 
 class EurostatDownloader:
@@ -23,9 +24,6 @@ class EurostatDownloader:
     def needs_update(self, eus_date_str, local_date_str):
         last_update_eus = self.parse_date(eus_date_str)
         last_local_date = self.parse_date(local_date_str)
-
-        # Just to test. SHOULD BE DELETED LATER!
-        print("TYPES:", type(last_update_eus), type(last_local_date))
 
         # If there is no local date txt file, it means the data is never downloaded
         # Or the date txt file removed or moved so we need to download the data
