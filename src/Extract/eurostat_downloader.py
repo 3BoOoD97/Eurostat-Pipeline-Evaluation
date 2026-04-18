@@ -90,10 +90,11 @@ class EurostatDownloader:
             print(f"Error during perform_download for {self.dataset_name}: {e}")
             raise
 
-
-
-
-
+    def run(self):
+        try:
+            self.download_dataset()
+        except Exception as e:
+            print(f"Run failed for dataset '{self.dataset_name}': {e}")
 
 
 
