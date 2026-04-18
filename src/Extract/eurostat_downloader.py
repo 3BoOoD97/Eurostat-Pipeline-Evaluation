@@ -5,6 +5,7 @@ from dateutil import parser
 
 class EurostatDownloader:
     def __init__(self, dataset_name):
+
         self.dataset_name = dataset_name
         self.eus_client = eurostat_client.EurostatClient(self.dataset_name)
         self.file_manager = file_manager.FileManager(self.dataset_name)
@@ -44,33 +45,53 @@ class EurostatDownloader:
 
 
     def download_dataset(self):
-
         # Check if the user provided a valid dataset name
-        if self.eus_client.validate_dataset():
-            try:
-                # Fetch latest update date from Eurostat
-                eus_last_update_date =  self.eus_client.fetch_last_update_date()
+        if not self.eus_client.validate_dataset():
+            raise Exception("Please provide a valid dataset name")
 
-                # Check if local data file exists
-                if self.file_manager.data_file_exists():
-                    # If file exists: Read local saved date and Check needs_update()
-                    local_last_update_date = self.file_manager.read_last_download_date()
-                    # Compare the local update date with latest Eurostat update date
-                    if self.needs_update(eus_last_update_date, local_last_update_date):
-                        # If local date is older than Eurostat date then update needed
-                        eu_steam=self.eus_client.download_stream()
-                        # Download stream
-                        self.file_manager.save_file(eu_steam)
-                        # Save new local date
-                        self.file_manager.save_last_download_date(self.eus_client.fetch_last_update_date())
+
+        try:
+            # Fetch latest update date from Eurostat
+            eus_last_update_date =  self.eus_client.fetch_last_update_date()
+
+            # Check if local data file exists
+            if self.file_manager.data_file_exists():
+                # If file exists: Read local saved date and Check needs_update()
+                local_last_update_date = self.file_manager.read_last_download_date()
+                # Compare the local update date with latest Eurostat update date
+                if self.needs_update(eus_last_update_date, local_last_update_date):
+                    self.perform_download(eus_last_update_date)
+                    print(f"Download {self.dataset_name} Completed and date saved")
                     # if the local date is not older than Eurostat then no need to update
-                    else:
-                        print("The data is already up to date!")
-                # If local data file doesn't exist
                 else:
-                    self.eus_client.download_stream()
-                    self.file_manager.save_file(self.eus_client.download_stream())
-                    self.file_manager.save_last_download_date(eus_last_update_date)
+                    print(f"The data for {self.dataset_name} is already up to date!")
+            # If local data file doesn't exist
+            else:
+                # First time download
+                self.perform_download(eus_last_update_date)
+                print(f"Download {self.dataset_name} completed and date saved.")
+
+        except Exception as e:
+            print(f"Download failed for {self.dataset_name}: {e}")
+
+
+
+    def perform_download(self, last_update_date):
+        try:
+            eu_stream_download = self.eus_client.download_stream()
+            # Save the file first
+            self.file_manager.save_file(eu_stream_download)
+            # Only if saving succeeded, we save the new date
+            self.file_manager.save_last_download_date(last_update_date)
+
+            print(f"File for {self.dataset_name} saved successfully.")
+
+        except Exception as e:
+            print(f"Error during perform_download for {self.dataset_name}: {e}")
+            raise
+
+
+
 
 
 
