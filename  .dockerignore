@@ -1,0 +1,22 @@
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Git
+.gitignore
+
+# Tests
+tests/
+
+# Output data
+output/
+
+# Docs
+docs/
+
+# Logs
+*.log
+

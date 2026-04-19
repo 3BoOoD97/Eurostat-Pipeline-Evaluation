@@ -69,5 +69,3 @@ class FileManager:
         else:
             print(f" The date txt file {self.last_download_file_date} doesn't exist  ")
             return None
-
-
