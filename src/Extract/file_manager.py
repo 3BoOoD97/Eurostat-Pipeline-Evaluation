@@ -6,7 +6,7 @@ class FileManager:
         if not dataset_name or not dataset_name.strip():
             raise ValueError("Dataset name should not be empty!!")
 
-        # Create folders to save date and data if they don't exist
+        # Create folders to save date and raw data if they don't exist
         os.makedirs("./output/last_download_date", exist_ok=True)
         os.makedirs("./output/raw", exist_ok=True)
 

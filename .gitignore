@@ -205,3 +205,10 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+
+# Ignore data files
+output/last_download_date/*.txt
+output/processed/*.csv
+output/processed/*.parquet
+output/raw/*.tsv.gz
