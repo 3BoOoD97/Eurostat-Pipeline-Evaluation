@@ -9,12 +9,16 @@ class EurostatTransformer:
         if not dataset_name or not dataset_name.strip():
             raise ValueError("Eurostat Dataset name should not be empty!")
 
+        BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+
         # Create folders to save processed data if it doesn't exist
-        os.makedirs("../../output/processed", exist_ok=True)
+        os.makedirs(os.path.join(BASE_DIR, "output", "processed"), exist_ok=True)
+
 
         self.dataset_name = dataset_name
-        self.input_data_file = f"../../output/raw/{dataset_name}.tsv.gz"
-        self.output_data_file = f"../../output/processed/{dataset_name}_processed"
+        self.input_data_file = os.path.join(BASE_DIR, "output", "raw", f"{self.dataset_name}.tsv.gz")
+        self.output_data_file = os.path.join(BASE_DIR, "output", "processed", f"{self.dataset_name}_processed")
+
 
 
     # This function is to check if the raw data file exists
