@@ -9,17 +9,12 @@ def main():
 
     dataset_name = sys.argv[1]
 
-    try:
-        print(f" Starting data transformation for dataset: {dataset_name}")
+    print(f" Starting data transformation for dataset: {dataset_name}")
 
-        transformer = EurostatTransformer(dataset_name)
-        df = transformer.run()
+    transformer = EurostatTransformer(dataset_name)
+    transformer.run()
 
-        print("Transform finished successfully")
-
-    except Exception as e:
-        print(f"Transform failed: {e}")
-
+    print("Transform finished successfully")
 
 if __name__ == "__main__":
     main()

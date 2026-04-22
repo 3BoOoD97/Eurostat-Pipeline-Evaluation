@@ -9,9 +9,12 @@ def main():
 
     dataset_name = sys.argv[1]
 
+    print(f" Starting data extraction for dataset: {dataset_name}")
+
     downloader = EurostatDownloader(dataset_name)
     downloader.run()
 
+    print("Extraction finished successfully")
 
 if __name__ == "__main__":
     main()
