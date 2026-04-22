@@ -7,13 +7,13 @@ class FileManager:
             raise ValueError("Dataset name should not be empty!!")
 
         # Create folders to save date and raw data if they don't exist
-        os.makedirs("./output/last_download_date", exist_ok=True)
-        os.makedirs("./output/raw", exist_ok=True)
+        os.makedirs("../../output/last_download_date", exist_ok=True)
+        os.makedirs("../../output/raw", exist_ok=True)
 
 
         self.dataset_name = dataset_name
-        self.output_gz_data_path = os.path.join("./output/raw", f"{self.dataset_name}.tsv.gz")
-        self.last_download_file_date = f"./output/last_download_date/{self.dataset_name}.txt"
+        self.output_gz_data_path = os.path.join("../../output/raw", f"{self.dataset_name}.tsv.gz")
+        self.last_download_file_date = f"../../output/last_download_date/{self.dataset_name}.txt"
 
     # This function checks if the data file exists locally or not
     def data_file_exists(self):
