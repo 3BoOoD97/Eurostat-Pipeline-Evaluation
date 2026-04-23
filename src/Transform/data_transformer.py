@@ -101,7 +101,7 @@ class EurostatTransformer:
 
         # Extract numeric values including decimals and convert them from string to numeric
         df_long["metric_value"] = pd.to_numeric(
-            df_long["value_raw"].str.extract(r"(\d+\.?\d*)", expand=False),
+            df_long["value_raw"].str.extract(r"(-?\d+\.?\d*)", expand=False),
             errors="coerce"
         )
 
@@ -179,7 +179,7 @@ class EurostatTransformer:
             raise ValueError("Transformed DataFrame is empty")
 
         # Make sure time_period metric_value columns exist
-        required_columns = ["time_period", "metric_value"]
+        required_columns = ["time_period", "metric_value", "country_code"]
         for col in required_columns:
             if col not in df.columns:
                 raise ValueError(f"Required column '{col}' is missing")
@@ -189,8 +189,11 @@ class EurostatTransformer:
 
     # This function saves the data
     def save_transformed_data(self, df):
-        df.to_csv(f"{self.output_data_file}.csv", index=False)
-        df.to_parquet(f"{self.output_data_file}.parquet", index=False)
+        try:
+            df.to_csv(f"{self.output_data_file}.csv", index=False)
+            df.to_parquet(f"{self.output_data_file}.parquet", index=False)
+        except Exception as e:
+            raise IOError(f"Failed to save transformed data: {e}")
 
 
 

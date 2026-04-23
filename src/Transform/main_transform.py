@@ -5,7 +5,8 @@ from data_transformer import EurostatTransformer
 def main():
     # Check dataset argument
     if len(sys.argv) < 2:
-        raise ValueError("You must provide a dataset name as an argument")
+        print("You must provide a dataset name as an argument!")
+        sys.exit(1)
 
     dataset_name = sys.argv[1]
 

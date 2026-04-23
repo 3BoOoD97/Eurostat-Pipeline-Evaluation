@@ -51,10 +51,10 @@ class FileManager:
         try:
           with open(self.last_download_file_date, 'w', encoding='utf-8') as f:
             f.write(str(last_update))
-            print(f"Last download date {last_update} data file saved to {self.last_download_file_date}")
+            #print(f"Last download date {last_update} data file saved to {self.last_download_file_date}")
         except Exception as e:
-            print(f"Error while saving the Last download date {e}")
-            return None
+            raise IOError(f"Error while saving the last download date: {e}")
+
 
     # This function retrieves the date from the date txt file
     def read_last_download_date(self):
@@ -66,9 +66,6 @@ class FileManager:
                     date_str = f.read().strip()
                     return date_str
             except Exception as e:
-                print(f"Error while reading the date: {e}")
-                return None
-        # Else if the date txt file hasn't been created yet
-        else:
-            print(f" The date txt file {self.last_download_file_date} doesn't exist  ")
-            return None
+                raise IOError(f"Error while reading the last download date: {e}")
+
+

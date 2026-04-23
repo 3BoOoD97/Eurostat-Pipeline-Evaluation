@@ -32,8 +32,8 @@ class EurostatClient:
             # For any other HTTP error, re-raise the exception
             raise
         # Catch any other unexpected errors, return False because we cannot confirm the dataset exists
-        except Exception:
-            return False
+        except Exception as e:
+            raise ConnectionError(f"Failed to validate dataset due to connection issue: {e}")
 
     # This function is to fetch the last update date for the selected dataset
     def fetch_last_update_date(self):
@@ -58,7 +58,7 @@ class EurostatClient:
                         last_update = item.get('date')
                         break
 
-                print("Last data update:", last_update)
+                #print("Last data update:", last_update)
                 return last_update
             # If any error happened
             except Exception as e:
