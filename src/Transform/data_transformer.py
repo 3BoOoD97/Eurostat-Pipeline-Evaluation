@@ -1,7 +1,7 @@
 import os
 import re
 import pandas as pd
-
+from data_validator import DataValidator
 
 class EurostatTransformer:
     def __init__(self, dataset_name):
@@ -172,20 +172,6 @@ class EurostatTransformer:
 
         return df_clean
 
-    # This function ensures the dataset is not empty and has all essential columns before saving.
-    def validate_transformed_data(self, df):
-        # Make sure the data is not empty
-        if df.empty:
-            raise ValueError("Transformed DataFrame is empty")
-
-        # Make sure time_period metric_value columns exist
-        required_columns = ["time_period", "metric_value", "country_code"]
-        for col in required_columns:
-            if col not in df.columns:
-                raise ValueError(f"Required column '{col}' is missing")
-        # Make sure the dataframe has at least one geographic column (either country_code or geo)
-        if "country_code" not in df.columns and "geo" not in df.columns:
-            raise ValueError("No country column found in transformed data")
 
     # This function saves the data
     def save_transformed_data(self, df):
@@ -216,11 +202,11 @@ class EurostatTransformer:
         # 7- Add derived columns and map the country code with its name
         df_final = self.add_derived_columns(df_renamed)
         # 8- Validate the final dataset (check for empty data and required columns)
-        self.validate_transformed_data(df_final)
+        validator = DataValidator(df_final)
+        validator.run()
         # Save the data
         self.save_transformed_data(df_final)
 
-        print(f"Transform completed successfully for dataset: {self.dataset_name}")
         print(f"Saved files:")
         print(f"- {self.output_data_file}.csv")
         print(f"- {self.output_data_file}.parquet")
