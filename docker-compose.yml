@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+
+  extract:
+    build:
+      context: .
+      dockerfile: docker/extract/Dockerfile
+    container_name: eurostat-extract
+    volumes:
+      - ./output:/app/output
+    command: "${DATASET_NAME}"
+
+
+  transform:
+    build:
+      context: .
+      dockerfile: docker/transform/Dockerfile
+    container_name: eurostat-transform
+    volumes:
+      - ./output:/app/output
+    depends_on:
+      - extract
+    command: "${DATASET_NAME}"
