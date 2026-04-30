@@ -13,7 +13,8 @@ def main():
     print(f"Starting data extraction for dataset: {dataset_name}")
 
     downloader = EurostatDownloader(dataset_name)
-    downloader.run()
-
+    updated = downloader.run()
+    print(f"UPDATED={str(updated).lower()}")
+    
 if __name__ == "__main__":
     main()

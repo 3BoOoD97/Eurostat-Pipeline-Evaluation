@@ -20,5 +20,4 @@ with DAG(
     )
 
 
-
     task_1 >> task_2

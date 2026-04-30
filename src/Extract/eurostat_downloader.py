@@ -55,6 +55,7 @@ class EurostatDownloader:
                 print(f"First time download for dataset: {self.dataset_name}")
                 self.perform_download(eus_last_update_date)
                 print(f"Download completed for {self.dataset_name}")
+                return True
 
             else:
                 local_last_update_date = self.file_manager.read_last_download_date()
@@ -64,10 +65,12 @@ class EurostatDownloader:
                     print(f"New update detected for {self.dataset_name}")
                     self.perform_download(eus_last_update_date)
                     print(f"Data updated successfully for {self.dataset_name}")
+                    return True
 
                 # If no update
                 else:
                     print(f"Data is already up to date for {self.dataset_name}")
+                    return False
 
         except Exception as e:
             print(f" Download failed for {self.dataset_name}: {e}")
@@ -82,13 +85,13 @@ class EurostatDownloader:
             # Only if saving succeeded, we save the new date
             self.file_manager.save_last_download_date(last_update_date)
 
-
         except Exception as e:
             print(f"Error during perform_download for {self.dataset_name}: {e}")
             raise
 
     def run(self):
-            self.download_dataset()
+            return self.download_dataset()
+
 
 
 

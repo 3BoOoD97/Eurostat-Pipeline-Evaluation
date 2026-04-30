@@ -20,3 +20,6 @@ docs/
 # Logs
 *.log
 
+# Airflow
+airflow/
+airflow/**
