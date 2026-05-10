@@ -212,3 +212,10 @@ output/last_download_date/*.txt
 output/processed/*.csv
 output/processed/*.parquet
 output/raw/*.tsv.gz
+
+
+# Ignore Airflow files
+airflow/logs/
+airflow/.env
+airflow/config/
+airflow/plugins/

@@ -1,6 +1,6 @@
 import eurostat_client as eurostat_client
 import file_manager as file_manager
-
+from airflow.operators.python import BranchPythonOperator
 
 from dateutil import parser
 
@@ -91,7 +91,3 @@ class EurostatDownloader:
 
     def run(self):
             return self.download_dataset()
-
-
-
-
