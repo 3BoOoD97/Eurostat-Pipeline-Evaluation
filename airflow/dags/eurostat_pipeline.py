@@ -10,6 +10,7 @@ OUTPUT_PATH = os.getenv(
     "/run/desktop/mnt/host/c/Users/Hp/Desktop/THESIS/CODE/output:/app/output"
 )
 
+
 # Dataset configuration dictionary
 DATASETS_CONFIG = {
     "migr_asyappctzm": { # Monthly data about asylum applicants
@@ -35,10 +36,17 @@ DATASETS_CONFIG = {
 }
 
 # Function to check if the data needs update or not
-def decide_if_transform (**kwargs):
+def decide_if_transform (dataset_name, **kwargs):
     ti = kwargs["ti"]
+    # Pull the last line of the output command
     status = (ti.xcom_pull(task_ids="extract_pipeline") or "").strip()
+
+    processed_parquet = f"/opt/airflow/output/processed/{dataset_name}_processed.parquet"
+    processed_csv = f"/opt/airflow/output/processed/{dataset_name}_processed.csv"
+
     if status == "UPDATED=true":
+        return 'transform_pipeline'
+    if not os.path.exists(processed_csv) or not os.path.exists(processed_parquet):
         return 'transform_pipeline'
     else:
         return 'skip_transform'
@@ -63,6 +71,7 @@ for dataset_name, config in DATASETS_CONFIG.items():
             description=config["description"],
     ) as dag:
 
+
         extract_pipeline = BashOperator(
             task_id="extract_pipeline",
             bash_command=f"docker run --rm -v {OUTPUT_PATH} code-extract {dataset_name}",
@@ -80,6 +89,7 @@ for dataset_name, config in DATASETS_CONFIG.items():
 
         check_update = BranchPythonOperator(
             task_id="check_update",
+            op_kwargs={"dataset_name": dataset_name},
             python_callable=decide_if_transform,
         )
 
