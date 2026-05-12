@@ -219,3 +219,6 @@ airflow/logs/
 airflow/.env
 airflow/config/
 airflow/plugins/
+
+# Ignore README.mb
+README.md
