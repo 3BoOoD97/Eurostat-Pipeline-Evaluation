@@ -22,3 +22,7 @@ migration patterns in Europe.
 
 
 ---
+
+
+## Current Architecture Diagram
+![Current Local Architecture](docs/current_local_architecture.jpeg)
