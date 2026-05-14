@@ -1,7 +1,6 @@
 import sys
 from data_transformer import EurostatTransformer
 
-
 def main():
     # Check dataset argument
     if len(sys.argv) < 2:

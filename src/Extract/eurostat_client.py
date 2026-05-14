@@ -57,8 +57,6 @@ class EurostatClient:
                     if isinstance(item, dict) and item.get('type') == 'UPDATE_DATA':
                         last_update = item.get('date')
                         break
-
-                #print("Last data update:", last_update)
                 return last_update
             # If any error happened
             except Exception as e:

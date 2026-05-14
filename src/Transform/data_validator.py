@@ -1,5 +1,3 @@
-import pandas as pd
-
 
 class DataValidator:
     def __init__(self, df):
@@ -34,7 +32,6 @@ class DataValidator:
                     f"The dataset contains negative values in '{metric_column}'"
                 )
 
-
     # To check if time period is in a correct format or not
     def validate_time_period_format(self, column_name: str = "time_period"):
         if column_name not in self.df.columns:
@@ -54,8 +51,6 @@ class DataValidator:
         self.validate_no_nulls_in_columns(["time_period", "metric_value", "country_code"])
         self.validate_non_negative_metric("metric_value")
         self.validate_time_period_format("time_period")
-
-
 
     def run(self):
         self.run_basic_validation()

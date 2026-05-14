@@ -14,12 +14,9 @@ class EurostatTransformer:
         # Create folders to save processed data if it doesn't exist
         os.makedirs(os.path.join(BASE_DIR, "output", "processed"), exist_ok=True)
 
-
         self.dataset_name = dataset_name
         self.input_data_file = os.path.join(BASE_DIR, "output", "raw", f"{self.dataset_name}.tsv.gz")
         self.output_data_file = os.path.join(BASE_DIR, "output", "processed", f"{self.dataset_name}_processed")
-
-
 
     # This function is to check if the raw data file exists
     def raw_file_exists(self):
@@ -97,7 +94,7 @@ class EurostatTransformer:
         # Replace : with NA
         df_long["value_raw"] = df_long["value_raw"].replace(
             r"^\s*:\s*$", pd.NA, regex=True
-        )
+)
 
         # Extract numeric values including decimals and convert them from string to numeric
         df_long["metric_value"] = pd.to_numeric(
