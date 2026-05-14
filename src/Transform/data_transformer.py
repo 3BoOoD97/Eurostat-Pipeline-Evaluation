@@ -106,7 +106,7 @@ class EurostatTransformer:
         )
 
         # Extract p(Provisional) / e(Estimated) symbols and save them  in a new column called flag
-        df_long["flag"] = df_long["value_raw"].str.extract(r"([pe])$", expand=False)
+        df_long["flag"] = df_long["value_raw"].str.extract(r"([peb])$", expand=False)
 
         return df_long
 
