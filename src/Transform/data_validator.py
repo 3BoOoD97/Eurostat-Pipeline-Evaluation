@@ -1,3 +1,6 @@
+import logging
+
+logger = logging.getLogger(__name__)
 
 class DataValidator:
     def __init__(self, df):
@@ -53,4 +56,6 @@ class DataValidator:
         self.validate_time_period_format("time_period")
 
     def run(self):
+        logger.info("Starting data validation...")
         self.run_basic_validation()
+        logger.info("Data validation completed successfully")

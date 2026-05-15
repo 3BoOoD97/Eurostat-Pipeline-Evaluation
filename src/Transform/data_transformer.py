@@ -1,7 +1,11 @@
 import os
 import re
 import pandas as pd
+import logging
 from data_validator import DataValidator
+
+logger = logging.getLogger(__name__)
+
 
 class EurostatTransformer:
     def __init__(self, dataset_name):
@@ -13,7 +17,7 @@ class EurostatTransformer:
 
         # Create folders to save processed data if it doesn't exist
         os.makedirs(os.path.join(BASE_DIR, "output", "processed"), exist_ok=True)
-
+        # Initialize values
         self.dataset_name = dataset_name
         self.input_data_file = os.path.join(BASE_DIR, "output", "raw", f"{self.dataset_name}.tsv.gz")
         self.output_data_file = os.path.join(BASE_DIR, "output", "processed", f"{self.dataset_name}_processed")
@@ -28,8 +32,8 @@ class EurostatTransformer:
             self.input_data_file,
             sep="\t",
             compression="gzip",
-            low_memory=False, # Read the entire file at once using more memory capacity
-            na_values=[":", ": ", "–", "-"] #Replace these symbols with Nan
+            low_memory=False,  # Read the entire file at once using more memory capacity
+            na_values=[":", ": ", "–", "-"]  # Replace these symbols with Nan
         )
         return df_raw
 
@@ -94,7 +98,7 @@ class EurostatTransformer:
         # Replace : with NA
         df_long["value_raw"] = df_long["value_raw"].replace(
             r"^\s*:\s*$", pd.NA, regex=True
-)
+        )
 
         # Extract numeric values including decimals and convert them from string to numeric
         df_long["metric_value"] = pd.to_numeric(
@@ -146,7 +150,7 @@ class EurostatTransformer:
 
     # This function translates short country codes into full names and marks EU totals.
     def add_derived_columns(self, df_clean):
-        # If country_code = EU27_2020 then is_aggregate = true to analysis the data easily later
+        # If country_code = EU27_2020 then is_aggregate = true
         if "country_code" in df_clean.columns:
             df_clean["is_aggregate"] = df_clean["country_code"].isin(["EU27_2020"])
 
@@ -164,11 +168,10 @@ class EurostatTransformer:
             }
             # Create a new column and map the country_code with its name from the dictionary
             df_clean["country_name"] = df_clean["country_code"].map(country_map)
-            # Any country doesn't exist in the dictionary in the then save it using its  country_code
+            # Any country doesn't exist in the dictionary in the then save it using its country_code
             df_clean["country_name"] = df_clean["country_name"].fillna(df_clean["country_code"])
 
         return df_clean
-
 
     # This function saves the data
     def save_transformed_data(self, df):
@@ -178,12 +181,12 @@ class EurostatTransformer:
         except Exception as e:
             raise IOError(f"Failed to save transformed data: {e}")
 
-
-
     def run(self) -> pd.DataFrame:
+
         # Make sure the raw data file exists
         if not self.raw_file_exists():
             raise FileNotFoundError(f"Raw input file not found: {self.input_data_file}")
+
         # 1- Read raw data file and save it as a pandas df
         df_raw = self.read_raw_data()
         # 2- Split the df combined columns into separate columns
@@ -204,9 +207,8 @@ class EurostatTransformer:
         # Save the data
         self.save_transformed_data(df_final)
 
-        print(f"Saved files:")
-        print(f"- {self.output_data_file}.csv")
-        print(f"- {self.output_data_file}.parquet")
+        logger.info("Saved files:")
+        logger.info(f"- {self.output_data_file}.csv")
+        logger.info(f"- {self.output_data_file}.parquet")
 
         return df_final
-
