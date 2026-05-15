@@ -1,5 +1,8 @@
 import requests
 import time
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class EurostatClient:
@@ -15,7 +18,7 @@ class EurostatClient:
         # To download the data in TSV.gz format
         self.data_url = f"https://ec.europa.eu/eurostat/api/dissemination/sdmx/3.0/data/dataflow/ESTAT/{dataset_name}/1.0?compress=true&format=tsv"
 
-    # This function is just to make sure that the dataset exists in Eurostat
+    # This function is just to make sure that the dataset name exists in Eurostat
     def validate_dataset(self):
         try:
             # Send GET req to metadata_url
@@ -29,13 +32,13 @@ class EurostatClient:
             # If the exception = 404 it means the data doesn't exist so it returns false
             if e.response is not None and e.response.status_code == 404:
                 return False
-            # For any other HTTP error, re-raise the exception
+            # For any other HTTP error then re-raise the exception
             raise
-        # Catch any other unexpected errors, return False because we cannot confirm the dataset exists
+        # Catch any other unexpected errors and raise a connection error
         except Exception as e:
             raise ConnectionError(f"Failed to validate dataset due to connection issue: {e}")
 
-    # This function is to fetch the last update date for the selected dataset
+    # This function is to fetch the metadata to get last update date for the selected dataset
     def fetch_last_update_date(self):
         # Try connection for 3 times
         for i in range(3):
@@ -60,36 +63,24 @@ class EurostatClient:
                 return last_update
             # If any error happened
             except Exception as e:
-                print(f"Download attempt: {i + 1} Failed {e}")
+                logger.warning(f"Metadata request attempt: {i + 1} Failed {e}")
         # If the connection failed in the 3 times throw an exception
-        raise Exception("Connection failed after 3 attempts")
-
+        raise Exception("Failed to fetch metadata after 3 attempts")
 
     # Attempting to download the Dataset data from Eurostat as a stream
     def download_stream(self):
         # Try connection for 3 times
         for i in range(3):
             try:
-                # Send a get req to download the data stream=True to not load the entire file into memory at once.
-                # But  loading the data in batches (chunks).
+                # Downloads the data in chunks instead of loading the whole file into memory.
                 response = requests.get(self.data_url, stream=True, timeout=120)
                 # Check what kind of res we got and return it if it was 2xx otherwise throw exception
                 response.raise_for_status()
                 return response
             # Catch errors while trying to download the data
             except Exception as e:
-                print(f" Download attempt: {i + 1} Failed {e}")
+                logger.warning(f" Download attempt: {i + 1} Failed {e}")
                 # Sleep 2 sec to give the server a better chance
                 time.sleep(2)
         # If the connection failed in the 3 times throw an exception
         raise ConnectionError("Data loading failed!")
-
-
-
-
-
-
-
-
-
-

@@ -1,4 +1,7 @@
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class FileManager:
@@ -12,10 +15,11 @@ class FileManager:
         os.makedirs(os.path.join(BASE_DIR, "output", "raw"), exist_ok=True)
         os.makedirs(os.path.join(BASE_DIR, "output", "last_download_date"), exist_ok=True)
 
-
         self.dataset_name = dataset_name
         self.output_gz_data_path = os.path.join(BASE_DIR, "output", "raw", f"{self.dataset_name}.tsv.gz")
-        self.last_download_file_date = os.path.join(BASE_DIR, "output", "last_download_date", f"{self.dataset_name}.txt")
+        self.last_download_file_date = os.path.join(BASE_DIR, "output", "last_download_date",
+                                                    f"{self.dataset_name}.txt")
+
     # This function checks if the data file exists locally or not
     def data_file_exists(self):
         return os.path.exists(self.output_gz_data_path)
@@ -29,6 +33,8 @@ class FileManager:
                 for chunk in stream.iter_content(chunk_size=1024 * 1024):
                     if chunk:
                         f.write(chunk)
+            logger.info(f"Raw data file saved: {self.output_gz_data_path}")
+
         # Catch general exceptions
         except Exception as e:
             raise IOError(f"Error saving file: {e}")
@@ -43,29 +49,29 @@ class FileManager:
     def get_data_file_size_mb(self):
         if not self.data_file_exists():
             return 0
-        return  os.path.getsize(self.output_gz_data_path) / (1024 * 1024)
+        return os.path.getsize(self.output_gz_data_path) / (1024 * 1024)
 
     # This function receives a date as a parameter and saves it as a text file.
     def save_last_download_date(self, last_update):
         # Save the passed date in a txt file
         try:
-          with open(self.last_download_file_date, 'w', encoding='utf-8') as f:
-            f.write(str(last_update))
-            #print(f"Last download date {last_update} data file saved to {self.last_download_file_date}")
+            with open(self.last_download_file_date, 'w', encoding='utf-8') as f:
+                f.write(str(last_update))
+            logger.info(f"Last download date saved: {self.last_download_file_date}")
+
         except Exception as e:
             raise IOError(f"Error while saving the last download date: {e}")
-
 
     # This function retrieves the date from the date txt file
     def read_last_download_date(self):
         # If there is date txt file
         if os.path.exists(self.last_download_file_date):
-            # Read the date and return it
-            try:
-                with open(self.last_download_file_date, 'r', encoding='utf-8') as f:
-                    date_str = f.read().strip()
-                    return date_str
-            except Exception as e:
-                raise IOError(f"Error while reading the last download date: {e}")
+            return None
 
-
+        # Read the date and return it
+        try:
+            with open(self.last_download_file_date, 'r', encoding='utf-8') as f:
+                date_str = f.read().strip()
+                return date_str
+        except Exception as e:
+            raise IOError(f"Error while reading the last download date: {e}")
