@@ -70,3 +70,18 @@ If the dataset is already up to date and the processed output files exist, Airfl
 ![Pipeline Flow Summary Diagram](docs/Airflow_diagram.jpeg)
 
 ---
+
+## Local Pipeline Status
+
+The local Docker and Airflow pipeline has been tested successfully with the following scenarios:
+
+- First run with missing raw, processed, and metadata files
+- No update with existing processed files
+- Missing processed output files
+- Missing raw data file
+- Missing last download date file
+- Invalid dataset handling
+- Standalone Docker container execution
+- Airflow DAG execution for all configured datasets
+
+The local version is now stable and ready for cloud storage integration.
