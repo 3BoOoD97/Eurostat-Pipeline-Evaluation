@@ -48,15 +48,21 @@ class EurostatDownloader:
         try:
             eus_last_update_date = self.eus_client.fetch_last_update_date()
 
-            # If first run
+            # If local data file doesn't exist
             if not self.file_manager.data_file_exists():
-                logger.info(f"First time download for dataset: {self.dataset_name}")
+                logger.info(f"No local data file file was found!")
                 self.perform_download(eus_last_update_date)
-                logger.info(f"Download completed for {self.dataset_name}")
+                logger.info(f"Download completed successfully for {self.dataset_name}")
                 return True
 
+            # If there is a local data file
             else:
+                logger.info(f"Data file was found locally")
                 local_last_update_date = self.file_manager.read_last_download_date()
+
+                # Print the latest local & eurostat dates
+                logger.info(f" eus_last_update_date '{eus_last_update_date}'")
+                logger.info(f" local_last_update_date '{local_last_update_date}'")
 
                 # If update needed
                 if self.needs_update(eus_last_update_date, local_last_update_date):
@@ -71,10 +77,11 @@ class EurostatDownloader:
                     return False
 
         except Exception as e:
-            logger.exception(f" Download failed for {self.dataset_name}")
+            logger.exception(f"Download failed for {self.dataset_name}")
             raise
 
     def perform_download(self, last_update_date):
+        logger.info(f"Downloading data ...")
         try:
             eu_stream_download = self.eus_client.download_stream()
             # Save the file

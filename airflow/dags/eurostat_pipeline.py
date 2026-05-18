@@ -74,13 +74,13 @@ for dataset_name, config in DATASETS_CONFIG.items():
 
         extract_pipeline = BashOperator(
             task_id="extract_pipeline",
-            bash_command=f"docker run --rm -v {OUTPUT_PATH} code-extract {dataset_name}",
+            bash_command=f"docker run --rm -v {OUTPUT_PATH} eurostat-extract {dataset_name}",
             do_xcom_push=True, # To save the last line of the output to xcom
         )
 
         transform_pipeline = BashOperator(
             task_id="transform_pipeline",
-            bash_command=f"docker run --rm -v {OUTPUT_PATH} code-transform {dataset_name}",
+            bash_command=f"docker run --rm -v {OUTPUT_PATH} eurostat-transform {dataset_name}",
         )
 
         skip_transform = EmptyOperator(

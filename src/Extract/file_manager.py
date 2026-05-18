@@ -65,7 +65,7 @@ class FileManager:
     # This function retrieves the date from the date txt file
     def read_last_download_date(self):
         # If there is date txt file
-        if os.path.exists(self.last_download_file_date):
+        if not os.path.exists(self.last_download_file_date):
             return None
 
         # Read the date and return it

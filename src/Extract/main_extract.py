@@ -23,7 +23,8 @@ def main():
 
     downloader = EurostatDownloader(dataset_name)
     updated = downloader.run()
-    print(f"UPDATED={str(updated).lower()}")
+    # Keep this as the final output line for Airflow XCom
+    print(f"UPDATED={str(updated).lower()}", flush=True)
 
 
 if __name__ == "__main__":
