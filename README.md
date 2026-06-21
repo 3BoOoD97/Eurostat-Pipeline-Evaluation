@@ -85,3 +85,16 @@ The local Docker and Airflow pipeline has been tested successfully with the foll
 - Airflow DAG execution for all configured datasets
 
 The local version is now stable and ready for cloud storage integration.
+
+
+## Data Sources & Overview
+For this project, I am using official administrative data from **Eurostat** (the statistical office of the European Union) to make sure the insights are as accurate as possible. 
+
+
+The pipeline ingests and processes the following key datasets:
+1. **Annual Asylum Applicants** (`migr_asyappctza`): Long-term aggregated trends.
+2. **Monthly Asylum Applicants** (`migr_asyappctzm`): Short-term fluctuations and time-series forecasting.
+3. **First Instance Decisions** (`migr_asydcfsta`): Recognition and rejection rates.
+4. **Normalized Asylum Applicants** (`migr_asyapp1mp`): Migration pressure per 1,000 inhabitants.
+
+> 💡 **For a deep dive into the variables, data types, and specific dataset findings, please refer to the comprehensive [Data Understanding Report](docs/DATA_UNDERSTANDING.md).** 
