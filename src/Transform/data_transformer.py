@@ -116,8 +116,11 @@ class EurostatTransformer:
         df_clean = df_long.copy()
 
         # Include total sex and age only
+       # if "sex" in df_clean.columns:
+       #     df_clean = df_clean[df_clean["sex"].astype(str).str.strip() == "T"].copy()
+
         if "sex" in df_clean.columns:
-            df_clean = df_clean[df_clean["sex"].astype(str).str.strip() == "T"].copy()
+            df_clean = df_clean[df_clean["sex"].astype(str).str.strip() != "T"].copy()
 
         if "age" in df_clean.columns:
             df_clean = df_clean[df_clean["age"].astype(str).str.strip() == "TOTAL"].copy()
