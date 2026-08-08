@@ -213,6 +213,7 @@ output/processed/*.csv
 output/processed/*.parquet
 output/raw/*.tsv.gz
 output/raw/*.tsv
+output/raw/*.py
 output/processed/*.py
 
 

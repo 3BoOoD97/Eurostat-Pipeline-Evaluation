@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r requirements/transform.txt
 
 COPY . .
 
-ENTRYPOINT ["python", "src/Transform/main_transform.py"]
+ENTRYPOINT ["python"]
